@@ -1,0 +1,13 @@
+dataplatform:
+  target: prod
+  outputs:
+    prod:
+        type: bigquery
+        method: service-account
+        keyfile: keys.json
+        project: data-platform-457606
+        dataset: dbt_bbagins
+        threads: 1
+        timeout_seconds: 300
+        location: EU
+        priority: interactive

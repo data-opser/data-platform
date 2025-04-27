@@ -1,0 +1,149 @@
+[0m14:22:02.674270 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E47D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E5310>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E4770>]}
+
+
+============================== 14:22:02.678276 | 03bc1c90-4904-40d5-8163-fc553faa477a ==============================
+[0m14:22:02.678276 [info ] [MainThread]: Running with dbt=1.9.4
+[0m14:22:02.679270 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'log_cache_events': 'False', 'write_json': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'version_check': 'True', 'profiles_dir': 'C:\\Users\\Nikita\\data-platform\\dags\\transform\\dbt', 'log_path': 'C:\\Users\\Nikita\\data-platform\\dags\\transform\\dbt\\meta', 'fail_fast': 'False', 'debug': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'empty': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt run --select fakebook --target-path meta --log-path meta --full-refresh --threads 50', 'log_format': 'default', 'introspect': 'True', 'target_path': 'meta', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m14:22:03.381870 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740CF7E630>]}
+[0m14:22:03.427869 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740E532840>]}
+[0m14:22:03.428869 [info ] [MainThread]: Registered adapter: bigquery=1.9.1
+[0m14:22:03.639863 [debug] [MainThread]: checksum: b5597158181700c50f5bc1c71fe28b37a6fb85633dc5323885263678b6bc782c, vars: {}, profile: , target: , version: 1.9.4
+[0m14:22:03.640863 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m14:22:03.641873 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E5B20>]}
+[0m14:22:04.594938 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.dataplatform.silver
+- models.dataplatform.silver.fakebook
+- models.dataplatform.gold
+[0m14:22:04.599990 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740EA77530>]}
+[0m14:22:04.655934 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\Nikita\data-platform\dags\transform\dbt\meta\manifest.json
+[0m14:22:04.658934 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\Nikita\data-platform\dags\transform\dbt\meta\semantic_manifest.json
+[0m14:22:04.678440 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740EA4DBB0>]}
+[0m14:22:04.679439 [info ] [MainThread]: Found 2 models, 4 data tests, 491 macros
+[0m14:22:04.680440 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740EC50AD0>]}
+[0m14:22:04.681440 [info ] [MainThread]: 
+[0m14:22:04.682181 [info ] [MainThread]: Concurrency: 50 threads (target='prod')
+[0m14:22:04.683161 [info ] [MainThread]: 
+[0m14:22:04.683161 [debug] [MainThread]: Acquiring new bigquery connection 'master'
+[0m14:22:04.687170 [debug] [ThreadPool]: Acquiring new bigquery connection 'list_data-platform-457606'
+[0m14:22:04.687170 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m14:22:05.188175 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_data-platform-457606, now create_data-platform-457606_dbt_bbagins)
+[0m14:22:05.189174 [debug] [ThreadPool]: Creating schema "database: "data-platform-457606"
+schema: "dbt_bbagins"
+"
+[0m14:22:05.198176 [debug] [ThreadPool]: On create_data-platform-457606_dbt_bbagins: /* {"app": "dbt", "dbt_version": "1.9.4", "profile_name": "dataplatform", "target_name": "prod", "connection_name": "create_data-platform-457606_dbt_bbagins"} */
+create schema if not exists `data-platform-457606`.`dbt_bbagins`
+  
+[0m14:22:05.198176 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m14:22:05.731609 [debug] [ThreadPool]: BigQuery adapter: https://console.cloud.google.com/bigquery?project=data-platform-457606&j=bq:EU:49ee41ab-0c13-47ed-be95-68a3bf327911&page=queryresults
+[0m14:22:07.687321 [debug] [ThreadPool]: Acquiring new bigquery connection 'list_data-platform-457606_dbt_bbagins'
+[0m14:22:07.687321 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m14:22:08.042251 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740E5A0B00>]}
+[0m14:22:08.042251 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m14:22:08.055589 [debug] [Thread-1 (]: Began running node model.dataplatform.my_first_dbt_model
+[0m14:22:08.056612 [info ] [Thread-1 (]: 1 of 2 START sql table model dbt_bbagins.my_first_dbt_model .................... [RUN]
+[0m14:22:08.056612 [debug] [Thread-1 (]: Acquiring new bigquery connection 'model.dataplatform.my_first_dbt_model'
+[0m14:22:08.057606 [debug] [Thread-1 (]: Began compiling node model.dataplatform.my_first_dbt_model
+[0m14:22:08.063608 [debug] [Thread-1 (]: Writing injected SQL for node "model.dataplatform.my_first_dbt_model"
+[0m14:22:08.064607 [debug] [Thread-1 (]: Began executing node model.dataplatform.my_first_dbt_model
+[0m14:22:08.092613 [debug] [Thread-1 (]: Writing runtime sql for node "model.dataplatform.my_first_dbt_model"
+[0m14:22:08.093607 [debug] [Thread-1 (]: On model.dataplatform.my_first_dbt_model: /* {"app": "dbt", "dbt_version": "1.9.4", "profile_name": "dataplatform", "target_name": "prod", "node_id": "model.dataplatform.my_first_dbt_model"} */
+
+  
+    
+
+    create or replace table `data-platform-457606`.`dbt_bbagins`.`my_first_dbt_model`
+      
+    
+    
+
+    OPTIONS(
+      description="""A starter dbt model"""
+    )
+    as (
+      /*
+    Welcome to your first dbt model!
+    Did you know that you can also configure models directly within SQL files?
+    This will override configurations stated in dbt_project.yml
+
+    Try changing "table" to "view" below
+*/
+
+
+
+with source_data as (
+
+    select 1 as id
+    union all
+    select null as id
+
+)
+
+select *
+from source_data
+
+/*
+    Uncomment the line below to remove records with null `id` values
+*/
+
+-- where id is not null
+    );
+  
+[0m14:22:08.094607 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m14:22:08.758794 [debug] [Thread-1 (]: BigQuery adapter: https://console.cloud.google.com/bigquery?project=data-platform-457606&j=bq:EU:a4cd15f1-a5b0-43d7-b2cd-1b1d2754e6b1&page=queryresults
+[0m14:22:10.614475 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017472CC4950>]}
+[0m14:22:10.614475 [info ] [Thread-1 (]: 1 of 2 OK created sql table model dbt_bbagins.my_first_dbt_model ............... [[32mCREATE TABLE (2.0 rows, 0 processed)[0m in 2.56s]
+[0m14:22:10.615474 [debug] [Thread-1 (]: Finished running node model.dataplatform.my_first_dbt_model
+[0m14:22:10.616469 [debug] [Thread-3 (]: Began running node model.dataplatform.my_second_dbt_model
+[0m14:22:10.617468 [info ] [Thread-3 (]: 2 of 2 START sql table model dbt_bbagins.my_second_dbt_model ................... [RUN]
+[0m14:22:10.618484 [debug] [Thread-3 (]: Acquiring new bigquery connection 'model.dataplatform.my_second_dbt_model'
+[0m14:22:10.618484 [debug] [Thread-3 (]: Began compiling node model.dataplatform.my_second_dbt_model
+[0m14:22:10.620474 [debug] [Thread-3 (]: Writing injected SQL for node "model.dataplatform.my_second_dbt_model"
+[0m14:22:10.621474 [debug] [Thread-3 (]: Began executing node model.dataplatform.my_second_dbt_model
+[0m14:22:10.623474 [debug] [Thread-3 (]: Writing runtime sql for node "model.dataplatform.my_second_dbt_model"
+[0m14:22:10.624474 [debug] [Thread-3 (]: On model.dataplatform.my_second_dbt_model: /* {"app": "dbt", "dbt_version": "1.9.4", "profile_name": "dataplatform", "target_name": "prod", "node_id": "model.dataplatform.my_second_dbt_model"} */
+
+  
+    
+
+    create or replace table `data-platform-457606`.`dbt_bbagins`.`my_second_dbt_model`
+      
+    
+    
+
+    OPTIONS(
+      description="""A starter dbt model"""
+    )
+    as (
+      -- Use the `ref` function to select from other models
+
+select *
+from `data-platform-457606`.`dbt_bbagins`.`my_first_dbt_model`
+where id = 1
+    );
+  
+[0m14:22:10.624474 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m14:22:11.254451 [debug] [Thread-3 (]: BigQuery adapter: https://console.cloud.google.com/bigquery?project=data-platform-457606&j=bq:EU:5bf4b184-7755-49a7-b37e-848c3a353877&page=queryresults
+[0m14:22:13.138474 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '03bc1c90-4904-40d5-8163-fc553faa477a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001740F420710>]}
+[0m14:22:13.138474 [info ] [Thread-3 (]: 2 of 2 OK created sql table model dbt_bbagins.my_second_dbt_model .............. [[32mCREATE TABLE (1.0 rows, 8.0 Bytes processed)[0m in 2.52s]
+[0m14:22:13.139467 [debug] [Thread-3 (]: Finished running node model.dataplatform.my_second_dbt_model
+[0m14:22:13.142466 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m14:22:13.144474 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m14:22:13.144474 [debug] [MainThread]: Connection 'create_data-platform-457606_dbt_bbagins' was properly closed.
+[0m14:22:13.144474 [debug] [MainThread]: Connection 'list_data-platform-457606_dbt_bbagins' was properly closed.
+[0m14:22:13.145466 [debug] [MainThread]: Connection 'model.dataplatform.my_first_dbt_model' was properly closed.
+[0m14:22:13.145466 [debug] [MainThread]: Connection 'model.dataplatform.my_second_dbt_model' was properly closed.
+[0m14:22:13.145466 [info ] [MainThread]: 
+[0m14:22:13.146466 [info ] [MainThread]: Finished running 2 table models in 0 hours 0 minutes and 8.46 seconds (8.46s).
+[0m14:22:13.147468 [debug] [MainThread]: Command end result
+[0m14:22:13.163471 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\Nikita\data-platform\dags\transform\dbt\meta\manifest.json
+[0m14:22:13.165477 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\Nikita\data-platform\dags\transform\dbt\meta\semantic_manifest.json
+[0m14:22:13.171476 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\Nikita\data-platform\dags\transform\dbt\meta\run_results.json
+[0m14:22:13.171476 [info ] [MainThread]: 
+[0m14:22:13.172482 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m14:22:13.173481 [info ] [MainThread]: 
+[0m14:22:13.174466 [info ] [MainThread]: Done. PASS=2 WARN=0 ERROR=0 SKIP=0 TOTAL=2
+[0m14:22:13.175471 [debug] [MainThread]: Command `dbt run` succeeded at 14:22:13.175471 after 10.61 seconds
+[0m14:22:13.175471 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E44A0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E4560>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000174737E4770>]}
+[0m14:22:13.176486 [debug] [MainThread]: Flushing usage events
+[0m14:22:13.765583 [debug] [MainThread]: An error was encountered while trying to flush usage events
