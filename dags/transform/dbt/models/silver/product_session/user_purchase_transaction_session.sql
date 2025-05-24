@@ -1,11 +1,11 @@
 
 select
-
     ss.session_started_at,
-    os.onboarding_started_at,
     ss.profile_id,
     ss.session_id,
     ss.first_seen_at,
+    ss.session_number,
+    ss.session_engagement_time_ms,
 
     ss.device_type,
     ss.device_brand,
@@ -41,18 +41,12 @@ select
     tc.user_ltv_revenue,
     tc.user_ltv_currency,
 
-    if(os.onboarding_started_at is not null, 1, 0) as onboarding_started,
+    if(ss.session_number = 1, 1, 0) AS onboarding_started,
     if(cs.checkout_started_at is not null, 1, 0) as checkout_presented,
     if(tc.purchase_completed_at is not null, 1, 0) as purchase_completed,
     if(vp.view_promotion_started_at is not null, 1, 0) as view_promotion_completed
 
-
 from {{ ref('user_session_started') }} ss
-left join {{ ref('user_onboarding_started') }} os
-    on
-        ss.profile_id = os.profile_id
-        and ss.session_id = os.session_id
-
 left join {{ ref('user_transaction_completed')}} tc
     on
         ss.profile_id = tc.profile_id

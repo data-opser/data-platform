@@ -1,24 +1,7 @@
 
-
-with onboarding_base_fields as (
+with session_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
-    where event_name = 'session_start' --and event_date = '20201101'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
-),
-
-onboarding_event_value AS (
-    select
-        _dlt_parent_id,
-        max(if(key = 'page_title', value__string_value, null)) as page_title,
-        max(if(key = 'page_location', value__string_value, null)) as page_location,
-        max(if(key = 'engaged_session_event', value__int_value, null)) as engaged_session_event,
-        max(if(key = 'session_engaged', value__int_value, null)) as session_engaged,
-        max(if(key = 'ga_session_id', value__int_value, null)) as ga_session_id,
-        max(if(key = 'ga_session_number', value__int_value, null)) as ga_session_number
-    from {{ source('ga4_full_sample', 'ga4_events__event_params') }}
-    group by _dlt_parent_id
+    where event_name = 'session_start'
 )
 
 select
@@ -26,6 +9,8 @@ select
     profile_id,
     session_id,
     first_seen_at,
+    session_number,
+    session_engagement_time_ms,
 
     device_type,
     device_brand,
@@ -45,8 +30,8 @@ select
     traffic_source_origin,
 
     landing_page_title,
-    landing_page_url,
-    session_number
+    landing_page_url
+
 from (
     select
         format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), SECOND)) as session_started_at,
@@ -75,6 +60,7 @@ from (
 
         ev.ga_session_id as session_id,
         ev.ga_session_number as session_number,
+        ev.engagement_time_msec as session_engagement_time_ms,
 
         row_number() over(
             partition by
@@ -83,8 +69,8 @@ from (
                 bf.event_timestamp
         ) as dedup_row
 
-    from onboarding_base_fields bf
-    left join onboarding_event_value ev
+    from session_base_fields bf
+    left join {{ ref('base_event_value') }} ev
         on bf._dlt_id = ev._dlt_parent_id
 )
     where dedup_row = 1

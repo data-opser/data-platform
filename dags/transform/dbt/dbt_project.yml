@@ -42,9 +42,6 @@ models:
     silver:
       +tags: "silver"
       +schema: silver
-      fakebook:
-        +tags: "fakebook"
-        +schema: silver_fakebook
       user_event:
         +tags: "user_event"
         +schema: silver_user_event
