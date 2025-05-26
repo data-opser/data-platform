@@ -1,45 +1,37 @@
 
 select
-    vi.view_product_started_at,
+    vi.view_item_started_at,
     vi.profile_id,
     vi.session_id,
-    vi.first_seen_at,
+    vi.view_item_first_seen_at,
+    vi.view_item_count,
     vi.device_type,
     vi.device_brand,
     vi.device_model,
     vi.os_name,
     vi.os_version,
     vi.browser_name,
-    vi.landing_page_title,
-    vi.landing_page_url,
+    vi.view_item_landing_page_title,
+    vi.view_item_landing_page_url,
+
     vi.session_number,
     vi.product_id,
-    coalesce(pi.product_name,vi.product_name) as product_name,
-    coalesce(pi.product_brand,vi.product_brand) as product_brand,
-    coalesce(pi.product_variant,vi.product_variant) as product_variant,
-    coalesce(pi.product_category,vi.product_category) as product_category,
+    pi.sku_product_id,
+    coalesce(pi.product_name, vi.product_name) as product_name,
+    coalesce(pi.product_brand, vi.product_brand) as product_brand,
+    coalesce(pi.product_variant, vi.product_variant) as product_variant,
+    coalesce(pi.product_category, vi.product_category) as product_category,
 
     if(ac.add_card_at is not null, 1, 0) as add_card,
     if(pi.purchase_completed_at is not null, 1, 0) as purchase_completed,
 
     ac.add_card_at,
+    ac.add_card_first_seen_at,
+    ac.add_card_landing_page_title,
+    ac.add_card_landing_page_url,
+
     pi.purchase_completed_at,
     pi.transaction_id,
-
-    vi.product_id as view_id_product,
-    pi.product_id as purchase_id_product,
-
-    vi.product_name as v_product_name,
-    pi.product_name as p_product_name,
-
-    vi.product_brand as v_product_brand,
-    pi.product_brand as p_product_brand,
-
-    vi.product_variant as v_product_variant,
-    pi.product_variant as p_product_variant,
-
-    vi.product_category as v_product_category,
-    pi.product_category as p_product_category,
 
     pi.payment_method,
     pi.shipping_method,

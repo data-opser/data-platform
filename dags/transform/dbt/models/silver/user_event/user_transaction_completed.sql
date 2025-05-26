@@ -91,9 +91,9 @@ from (
         bf.device__web_info__browser as browser_name,
 
         bf.ecommerce__transaction_id,
-        bf.ecommerce__unique_items as unique_items_count,
+        cast(bf.ecommerce__unique_items as int64) as unique_items_count,
         bf.event_value_in_usd,
-        bf.ecommerce__total_item_quantity as total_item_quantity,
+        cast(bf.ecommerce__total_item_quantity as int64) as total_item_quantity,
         bf.ecommerce__purchase_revenue_in_usd as purchase_revenue_usd,
         bf.ecommerce__purchase_revenue as purchase_revenue,
         bf.ecommerce__tax_value_in_usd as tax_usd,

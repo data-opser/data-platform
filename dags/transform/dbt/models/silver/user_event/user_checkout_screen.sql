@@ -1,48 +1,33 @@
 
-
 with checkout_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
-    where event_name = 'begin_checkout' --and event_date = '20201101'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
-),
-
-checkout_event_value AS (
-    select
-        _dlt_parent_id,
-        max(if(key = 'engagement_time_msec', value__int_value, null)) as engagement_time_msec,
-        max(if(key = 'ga_session_number', value__int_value, null)) as ga_session_number,
-        max(if(key = 'page_title', value__string_value, null)) as page_title,
-        max(if(key = 'engaged_session_event', value__int_value, null)) as engaged_session_event,
-        max(if(key = 'session_engaged', value__string_value, null)) as session_engaged,
-        max(if(key = 'ga_session_id', value__int_value, null)) as ga_session_id,
-        max(if(key = 'page_location', value__string_value, null)) as page_location
-    from {{ source('ga4_full_sample', 'ga4_events__event_params') }}
-    group by _dlt_parent_id
+    where event_name = 'begin_checkout'
 )
-
 
 select
     checkout_started_at,
     profile_id,
     session_id,
-    first_seen_at,
+    checkout_first_seen_at,
     device_type,
     device_brand,
     device_model,
     os_name,
     os_version,
     browser_name,
-    landing_page_title,
-    landing_page_url,
+    checkout_landing_page_title,
+    checkout_landing_page_url,
     session_number
 from (
     select
 
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), SECOND)) AS checkout_started_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), second)
+        ) as checkout_started_at,
         bf.user_pseudo_id as profile_id,
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), SECOND)) AS first_seen_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), second)
+        ) as checkout_first_seen_at,
 
         bf.device__category as device_type,
         bf.device__mobile_brand_name as device_brand,
@@ -51,10 +36,15 @@ from (
         bf.device__operating_system_version as os_version,
         bf.device__web_info__browser as browser_name,
 
-        ev.page_title as landing_page_title,
-        ev.page_location as landing_page_url,
+        ev.page_title as checkout_landing_page_title,
+        ev.page_location as checkout_landing_page_url,
         ev.ga_session_id as session_id,
         ev.ga_session_number as session_number,
+
+        count(distinct event_timestamp) over (
+            partition by bf.user_pseudo_id, ev.ga_session_id
+        ) as checkout_count,
+
         row_number() over(
             partition by
                 bf.user_pseudo_id, ev.ga_session_id
@@ -63,8 +53,7 @@ from (
         ) as dedup_row
 
     from checkout_base_fields bf
-    left join checkout_event_value ev
+    left join {{ ref('base_event_value') }} ev
         on bf._dlt_id = ev._dlt_parent_id
-
 )
   where dedup_row = 1

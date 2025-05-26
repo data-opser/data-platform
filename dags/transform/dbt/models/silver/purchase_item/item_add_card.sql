@@ -1,23 +1,6 @@
 with add_card_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
     where event_name = 'add_to_cart'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
-),
-
-add_card_value AS (
-    select
-        _dlt_parent_id,
-        max(if(key = 'engagement_time_msec', value__int_value, null)) as engagement_time_msec,
-        max(if(key = 'ga_session_number', value__int_value, null)) as ga_session_number,
-        max(if(key = 'page_title', value__string_value, null)) as page_title,
-        max(if(key = 'engaged_session_event', value__int_value, null)) as engaged_session_event,
-        max(if(key = 'session_engaged', value__string_value, null)) as session_engaged,
-        max(if(key = 'ga_session_id', value__int_value, null)) as ga_session_id,
-        max(if(key = 'page_location', value__string_value, null)) as page_location
-    from {{ source('ga4_full_sample', 'ga4_events__event_params') }}
-    group by _dlt_parent_id
 ),
 
 add_product_item_card as (
@@ -39,9 +22,9 @@ select
     add_card_at,
     profile_id,
     session_id,
-    first_seen_at,
-    landing_page_title,
-    landing_page_url,
+    add_card_first_seen_at,
+    add_card_landing_page_title,
+    add_card_landing_page_url,
     session_number,
     product_id,
     product_name,
@@ -51,12 +34,16 @@ select
     quantity_purchased
 from (
     select
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(ac.event_timestamp), SECOND)) AS add_card_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(ac.event_timestamp), second)
+        ) as add_card_at,
         ac.user_pseudo_id as profile_id,
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(ac.user_first_touch_timestamp), SECOND)) AS first_seen_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(ac.user_first_touch_timestamp), second)
+        ) as add_card_first_seen_at,
 
-        ev.page_title as landing_page_title,
-        ev.page_location as landing_page_url,
+        ev.page_title as add_card_landing_page_title,
+        ev.page_location as add_card_landing_page_url,
         ev.ga_session_id as session_id,
         ev.ga_session_number as session_number,
 
@@ -75,7 +62,7 @@ from (
         ) as dedup_row
 
     from add_card_base_fields ac
-    left join add_card_value ev
+    left join {{ ref('base_event_value') }} ev
         on ac._dlt_id = ev._dlt_parent_id
     left join add_product_item_card pi
         on ac._dlt_id = pi.product_row_id

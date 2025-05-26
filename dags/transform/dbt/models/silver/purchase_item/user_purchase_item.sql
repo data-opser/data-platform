@@ -2,7 +2,7 @@
 with product_items as (
     select
         _dlt_parent_id as product_row_id,
-        item_id as product_id,
+        item_id as sku_product_id,
         item_name as product_name,
         item_brand as product_brand,
         item_variant as product_variant,
@@ -15,42 +15,52 @@ with product_items as (
     from {{ source('ga4_full_sample', 'ga4_events__items') }}
 )
 
-select
-    tc.purchase_completed_at,
-    tc.profile_id,
-    tc.session_id,
-    tc.transaction_id,
+select * from (
+    select
+        tc.purchase_completed_at,
+        tc.profile_id,
+        tc.session_id,
+        tc.transaction_id,
 
-    tc.payment_method,
-    tc.shipping_method,
-    tc.transaction_currency,
-    tc.applied_coupon,
+        tc.payment_method,
+        tc.shipping_method,
+        tc.transaction_currency,
+        tc.applied_coupon,
 
-    tc.ecommerce__transaction_id,
-    tc.unique_items_count,
-    tc.event_value_in_usd,
-    tc.total_item_quantity,
-    tc.purchase_revenue_usd,
-    tc.purchase_revenue,
-    tc.tax,
-    tc.tax_usd,
+        tc.ecommerce__transaction_id,
+        tc.unique_items_count,
+        tc.event_value_in_usd,
+        tc.total_item_quantity,
+        tc.purchase_revenue_usd,
+        tc.purchase_revenue,
+        tc.tax,
+        tc.tax_usd,
 
-    ei.product_id,
-    ei.product_name,
-    ei.product_brand,
-    ei.product_variant,
-    ei.product_category,
+        ei.sku_product_id,
+        ei.product_name,
+        ei.product_brand,
+        ei.product_variant,
+        ei.product_category,
 
-    ei.product_price,
-    ei.product_price_usd,
+        ei.product_price,
+        ei.product_price_usd,
 
-    ei.quantity_purchased,
-    ei.product_revenue,
-    ei.product_revenue_usd,
+        ei.quantity_purchased,
+        ei.product_revenue,
+        ei.product_revenue_usd,
 
-    tc.user_ltv_revenue,
-    tc.user_ltv_currency
+        tc.user_ltv_revenue,
+        tc.user_ltv_currency,
 
-from {{ ref('user_transaction_completed') }} tc
-left join product_items ei
-    on tc.event_row_id = ei.product_row_id
+        row_number() over(
+            partition by
+                tc.profile_id, tc.session_id, tc.transaction_id, ei.sku_product_id
+            order by
+                tc.purchase_completed_at
+        ) as dedup_row
+
+    from {{ ref('user_transaction_completed') }} tc
+    left join product_items ei
+        on tc.event_row_id = ei.product_row_id
+)
+where dedup_row = 1

@@ -1,49 +1,25 @@
 
 with promotion_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
-    where event_name = 'select_promotion' --and event_date = '20201101'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
-),
-
-promotion_event_value AS (
-    select
-        _dlt_parent_id,
-        max(if(key = 'engagement_time_msec', value__int_value, null)) as engagement_time_msec,
-        max(if(key = 'ga_session_number', value__int_value, null)) as ga_session_number,
-        max(if(key = 'page_title', value__string_value, null)) as page_title,
-        max(if(key = 'engaged_session_event', value__int_value, null)) as engaged_session_event,
-        max(if(key = 'session_engaged', value__string_value, null)) as session_engaged,
-        max(if(key = 'ga_session_id', value__int_value, null)) as ga_session_id,
-        max(if(key = 'page_location', value__string_value, null)) as page_location,
-        max(if(key = 'page_referrer', value__string_value, null)) as page_referrer,
-        max(if(key = 'campaign', value__string_value, null)) as campaign
-
-    from {{ source('ga4_full_sample', 'ga4_events__event_params') }}
-    group by _dlt_parent_id
+    where event_name = 'select_promotion'
 ),
 
 promotion_items as (
     select
-        _dlt_parent_id as promotion_event_id,
-        item_id as campaign_code ,
-        item_name as product_name,
-        item_brand as product_brand,
-        item_variant as product_variant,
-        item_category as product_category,
+        _dlt_parent_id as promo_event_id,
         item_list_index as item_position_in_list,
-        promotion_id,
-        promotion_name,
-        creative_name as promotion_creative_name
+        promotion_name as promo_name,
+        creative_name as promo_creative_name
     from {{ source('ga4_full_sample', 'ga4_events__items') }}
 )
 
 select
-    select_promotion_started_at,
+    select_promo_started_at,
     profile_id,
     session_id,
-    first_seen_at,
+    select_promo_first_seen_at,
+    select_promo_time_session_ms,
+    select_promo_count,
     device_type,
     device_brand,
     device_model,
@@ -54,24 +30,21 @@ select
     traffic_source_name,
     traffic_source_origin,
     platform,
-    landing_page_title,
-    landing_page_url,
-    page_referrer,
-    campaign,
-    campaign_code,
-    product_name,
-    product_brand,
-    product_variant,
-    product_category,
+    select_promo_landing_page_title,
+    select_promo_landing_page_url,
+    select_promo_page_referrer,
     item_position_in_list,
-    promotion_id,
-    promotion_name,
-    promotion_creative_name
+    promo_name,
+    promo_creative_name
 from (
     select
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), SECOND)) AS select_promotion_started_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), second)
+        ) AS select_promo_started_at,
         bf.user_pseudo_id as profile_id,
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), SECOND)) AS first_seen_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), second)
+        ) AS select_promo_first_seen_at,
 
         bf.device__category as device_type,
         bf.device__mobile_brand_name as device_brand,
@@ -85,34 +58,31 @@ from (
         bf.traffic_source__source as traffic_source_origin,
         bf.platform,
 
-        ev.page_title as landing_page_title,
-        ev.page_location as landing_page_url,
+        ev.engagement_time_msec as select_promo_time_session_ms,
+        ev.page_title as select_promo_landing_page_title,
+        ev.page_location as select_promo_landing_page_url,
         ev.ga_session_id as session_id,
-        ev.page_referrer,
+        ev.page_referrer as select_promo_page_referrer,
 
-        ev.campaign,
-
-        pt.campaign_code,
-        pt.product_name,
-        pt.product_brand,
-        pt.product_variant,
-        pt.product_category,
         pt.item_position_in_list,
-        pt.promotion_id,
-        pt.promotion_name,
-        pt.promotion_creative_name,
+        pt.promo_name,
+        pt.promo_creative_name,
+
+        count(distinct event_timestamp) over (
+            partition by bf.user_pseudo_id, ev.ga_session_id, pt.promo_name
+        ) as select_promo_count,
 
         row_number() over(
             partition by
-                bf.user_pseudo_id, ev.ga_session_id
+                bf.user_pseudo_id, ev.ga_session_id, pt.promo_name
             order by
                 bf.event_timestamp
         ) as dedup_row
 
     from promotion_base_fields bf
-    left join promotion_event_value ev
+    left join {{ ref('base_event_value') }} ev
         on bf._dlt_id = ev._dlt_parent_id
     left join promotion_items pt
-        on bf._dlt_id = pt.promotion_event_id
+        on bf._dlt_id = pt.promo_event_id
 )
-    where dedup_row = 1
+    where dedup_row = 1 and promo_name is not null

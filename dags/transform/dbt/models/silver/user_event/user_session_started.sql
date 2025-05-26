@@ -8,9 +8,8 @@ select
     session_started_at,
     profile_id,
     session_id,
-    first_seen_at,
+    session_first_seen_at,
     session_number,
-    session_engagement_time_ms,
 
     device_type,
     device_brand,
@@ -29,14 +28,19 @@ select
     traffic_source_name,
     traffic_source_origin,
 
-    landing_page_title,
-    landing_page_url
+    session_landing_page_title,
+    session_landing_page_url,
+    session_page_referrer
 
 from (
     select
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), SECOND)) as session_started_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), second)
+        ) as session_started_at,
         bf.user_pseudo_id as profile_id,
-        format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), SECOND)) as first_seen_at,
+        format_timestamp(
+                '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), second)
+        ) as session_first_seen_at,
 
         bf.device__category as device_type,
         bf.device__mobile_brand_name as device_brand,
@@ -55,12 +59,12 @@ from (
         bf.traffic_source__name as traffic_source_name,
         bf.traffic_source__source as traffic_source_origin,
 
-        ev.page_title as landing_page_title,
-        ev.page_location as landing_page_url,
+        ev.page_title as session_landing_page_title,
+        ev.page_location as session_landing_page_url,
+        ev.page_referrer as session_page_referrer,
 
         ev.ga_session_id as session_id,
         ev.ga_session_number as session_number,
-        ev.engagement_time_msec as session_engagement_time_ms,
 
         row_number() over(
             partition by

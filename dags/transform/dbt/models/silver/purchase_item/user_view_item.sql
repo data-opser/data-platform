@@ -36,18 +36,19 @@ view_product_item as (
 )
 
 select
-    view_product_started_at,
+    view_item_started_at,
     profile_id,
     session_id,
-    first_seen_at,
+    view_item_first_seen_at,
+    view_item_count,
     device_type,
     device_brand,
     device_model,
     os_name,
     os_version,
     browser_name,
-    landing_page_title,
-    landing_page_url,
+    view_item_landing_page_title,
+    view_item_landing_page_url,
     session_number,
     product_id,
     product_name,
@@ -57,9 +58,13 @@ select
 
 from (
 select
-    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), SECOND)) AS view_product_started_at,
+    format_timestamp(
+            '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.event_timestamp), second)
+    ) as view_item_started_at,
     bf.user_pseudo_id as profile_id,
-    format_timestamp('%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), SECOND)) AS first_seen_at,
+    format_timestamp(
+            '%Y-%m-%d %H:%M:%S', timestamp_trunc(timestamp_micros(bf.user_first_touch_timestamp), second)
+    ) as view_item_first_seen_at,
 
     bf.device__category as device_type,
     bf.device__mobile_brand_name as device_brand,
@@ -68,8 +73,8 @@ select
     bf.device__operating_system_version as os_version,
     bf.device__web_info__browser as browser_name,
 
-    ev.page_title as landing_page_title,
-    ev.page_location as landing_page_url,
+    ev.page_title as view_item_landing_page_title,
+    ev.page_location as view_item_landing_page_url,
     ev.ga_session_id as session_id,
     ev.ga_session_number as session_number,
 
@@ -79,6 +84,10 @@ select
     pi.product_variant,
     pi.product_category,
 
+    count(distinct event_timestamp) over (
+        partition by bf.user_pseudo_id, ev.ga_session_id, pi.product_id
+    ) as view_item_count,
+
     row_number() over(
         partition by
             bf.user_pseudo_id, ev.ga_session_id, pi.product_id
@@ -87,7 +96,7 @@ select
     ) as dedup_row
 
 from view_item_base_fields bf
-left join view_item_event_value ev
+left join {{ ref('base_event_value') }} ev
     on bf._dlt_id = ev._dlt_parent_id
 left join view_product_item pi
     on bf._dlt_id = pi.product_row_id
