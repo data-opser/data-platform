@@ -2,9 +2,6 @@
 with view_item_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
     where event_name = 'view_item'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
 ),
 
 view_item_event_value AS (

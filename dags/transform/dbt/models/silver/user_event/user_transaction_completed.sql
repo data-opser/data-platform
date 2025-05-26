@@ -1,9 +1,6 @@
 with purchase_base_fields as (
     select * from {{ source('ga4_full_sample', 'ga4_events') }}
-    where event_name = 'purchase' --and event_date = '20201101'
-{#    {% if is_incremental() -%}#}
-{#        and parse_date('%Y%m%d', event_date) >= date_sub(current_date(), interval 2 day)#}
-{#    {%- endif -%}#}
+    where event_name = 'purchase'
 ),
 
 
