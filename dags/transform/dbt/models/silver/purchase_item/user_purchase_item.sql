@@ -29,7 +29,6 @@ select * from (
 
         tc.ecommerce__transaction_id,
         tc.unique_items_count,
-        tc.event_value_in_usd,
         tc.total_item_quantity,
         tc.purchase_revenue_usd,
         tc.purchase_revenue,

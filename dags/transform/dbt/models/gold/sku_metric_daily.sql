@@ -12,8 +12,7 @@ select
     sum(ifnull(total_item_quantity, 0)) as total_item_quantity,
     sum(ifnull(quantity_purchased, 0)) as quantity_purchased,
 
-    sum(ifnull(product_revenue_usd, 0)) as product_revenue_usd,
-    sum(ifnull(user_ltv_revenue, 0)) as user_ltv_revenue
+    sum(ifnull(product_revenue_usd, 0)) as product_revenue_usd
 
 from {{ ref('user_item_funnel') }}
 where purchase_completed = 1

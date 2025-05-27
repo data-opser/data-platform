@@ -9,7 +9,7 @@ with user_item_view_funnel as (
         max(view_item_count) as view_item_count,
         countif(add_card = 1) as add_to_cart,
         countif(purchase_completed = 1) as purchase,
-        sum(if(purchase_completed = 1, user_ltv_revenue, 0)) as user_ltv_revenue
+        sum(if(purchase_completed = 1, purchase_revenue_usd, 0)) as purchase_revenue_usd
     from {{ ref('user_item_funnel') }}
     group by 1,2,3,4,5
 
@@ -23,7 +23,7 @@ select
     sum(ifnull(view_item_count, 0)) as view_item_total,
     sum(ifnull(add_to_cart, 0)) as add_to_cart,
     sum(ifnull(purchase, 0)) as purchase,
-    sum(ifnull(user_ltv_revenue, 0)) as user_ltv_revenue
+    sum(ifnull(purchase_revenue_usd, 0)) as purchase_revenue_usd
 
 from user_item_view_funnel
 group by 1,2,3

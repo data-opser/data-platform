@@ -40,7 +40,6 @@ select
 
     pi.ecommerce__transaction_id,
     pi.unique_items_count,
-    pi.event_value_in_usd,
     pi.total_item_quantity,
     pi.purchase_revenue_usd,
     pi.purchase_revenue,
