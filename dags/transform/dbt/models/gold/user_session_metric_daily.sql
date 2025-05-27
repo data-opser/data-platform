@@ -24,7 +24,7 @@ with user_session as (
         max(select_promo_total) as select_promo_total,
 
         sum(purchase_completed) as purchase_completed,
-        sum(user_ltv_revenue) as user_ltv_revenue,
+        sum(purchase_revenue_usd) as purchase_revenue_usd,
 
         sum(unique_items_count) as unique_items_count,
         sum(total_item_quantity) as total_item_quantity
@@ -59,7 +59,7 @@ select
 
     sum(ifnull(purchase_completed, 0)) as purchase_completed,
 
-    sum(ifnull(user_ltv_revenue, 0)) as user_ltv_revenue,
+    sum(ifnull(purchase_revenue_usd, 0)) as purchase_revenue_usd,
 
     sum(ifnull(unique_items_count, 0)) as unique_items_count,
     sum(ifnull(total_item_quantity, 0)) as total_item_quantity
