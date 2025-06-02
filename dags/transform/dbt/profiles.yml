@@ -9,5 +9,5 @@ dataplatform:
         dataset: dbt_bbagins
         threads: 1
         timeout_seconds: 300
-        location: EU
+        location: US
         priority: interactive

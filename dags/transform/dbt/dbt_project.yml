@@ -42,12 +42,15 @@ models:
     silver:
       +tags: "silver"
       +schema: silver
-#      +pre_hook:
-#        - "{{ vacuum_sources_in_model('Sunday') }}"
-#        - "{{ optimize_sources_in_model('Sunday') }}"
-      fakebook:
-        +tags: "fakebook"
-        +schema: silver_fakebook
+      user_event:
+        +tags: "user_event"
+        +schema: silver_user_event
+      purchase_item:
+        +tags: "purchase_item"
+        +schema: silver_purchase_item
+      product_session:
+        +tags: "product_session"
+        +schema: silver_product_session
     gold:
       +tags: "gold"
       +schema: gold

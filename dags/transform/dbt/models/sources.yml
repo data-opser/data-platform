@@ -1,0 +1,10 @@
+---
+version: 2
+
+sources:
+  - name: ga4_full_sample
+    schema: ga4_full_sample
+    tables:
+      - name: ga4_events
+      - name: ga4_events__event_params
+      - name: ga4_events__items
