@@ -12,8 +12,8 @@ select
 
     count(item_purchase_completed) as item_purchase_completed,
     count(distinct transaction_id) as transaction_count,
-    sum(ifnull(unique_items_count, 0)) as unique_items_count,
-    sum(ifnull(total_item_quantity, 0)) as total_item_quantity,
+{#    sum(ifnull(unique_items_count, 0)) as unique_items_count,#}
+{#    sum(ifnull(total_item_quantity, 0)) as total_item_quantity,#}
     sum(ifnull(quantity_purchased, 0)) as quantity_purchased,
 
     sum(product_revenue_usd) as product_revenue_usd

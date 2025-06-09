@@ -14,7 +14,7 @@ with user_item_view_funnel as (
         countif(add_card = 1) as add_to_cart,
         countif(item_purchase_completed = 1) as item_purchase_completed,
 {#        sum(if(purchase_completed = 1, purchase_revenue_usd, 0)) as purchase_revenue_usd#}
-        sum(purchase_revenue_usd) as purchase_revenue_usd
+        sum(product_revenue_usd) as product_revenue_usd
 
     from {{ ref('user_item_funnel') }}
     group by 1,2,3,4
@@ -32,7 +32,7 @@ select
     sum(total_view_item_count) as total_view_item_count,
     sum(add_to_cart) as add_to_cart,
     sum(item_purchase_completed) as item_purchase_completed,
-    sum(purchase_revenue_usd) as purchase_revenue_usd
+    sum(product_revenue_usd) as product_revenue_usd
 
 from user_item_view_funnel
 group by 1, 2, 3, 4, 5
