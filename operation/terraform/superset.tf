@@ -4,6 +4,7 @@ module "instance_template" {
 
   region             = var.region
   project_id         = var.project
+  network = "default"
 }
 
 module "compute_instance" {
