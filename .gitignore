@@ -2,5 +2,4 @@ venv/
 .env
 superset_config.py
 .terraform*
-terraform.*
 *.idea
