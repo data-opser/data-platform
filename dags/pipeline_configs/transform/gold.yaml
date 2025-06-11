@@ -2,6 +2,9 @@ dags:
   dbt_gold:
     dag_config:
       tags: [ "transform", "dbt", "gold" ]
-      schedule: "bigquery://ga4_ingest"
+      schedule:
+        - "bigquery://dbt_silver_purchase_item"
+        - "bigquery://dbt_silver_product_session"
+        - "bigquery://dbt_silver_user_event"
     tool: dbt
     outlet: False
