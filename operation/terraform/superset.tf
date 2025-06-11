@@ -17,7 +17,7 @@ module "compute_instance" {
   instance_template   = module.instance_template.self_link
   deletion_protection = false
   access_config = [{
-    nat_ip       = null
+    nat_ip       = google_compute_address.static_ip_superset.address
     network_tier = "STANDARD"
   }]
 }
@@ -33,4 +33,10 @@ resource "google_compute_firewall" "allow-trafick" {
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["allow-internet"]
+}
+
+resource "google_compute_address" "static_ip_superset" {
+  name    = "superset-static-ip"
+  address_type = "EXTERNAL"
+  network_tier = "STANDARD"
 }
