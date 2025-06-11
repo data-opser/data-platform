@@ -9,8 +9,8 @@ resource "google_project_iam_member" "env_sa_worker" {
   member  = "serviceAccount:${google_service_account.env_sa.email}"
 }
 
-resource "google_service_account_iam_member" "agent_can_impersonate" {
-  service_account_id = google_service_account.env_sa.name
-  role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:service-data-platform-457606@cloudcomposer-accounts.iam.gserviceaccount.com"
-}
+# resource "google_service_account_iam_member" "agent_can_impersonate" {
+#   service_account_id = google_service_account.env_sa.name
+#   role               = "roles/iam.serviceAccountUser"
+#   member             = "serviceAccount:service-data-platform-457606@cloudcomposer-accounts.iam.gserviceaccount.com"
+# }

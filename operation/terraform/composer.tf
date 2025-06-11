@@ -48,29 +48,29 @@
 #   }
 # }
 
-resource "google_composer_environment" "cc3" {
-  provider = google-beta
-  name     = "prod-airflow"
-  region   = var.region
+# resource "google_composer_environment" "cc3" {
+#   provider = google-beta
+#   name     = "prod-airflow"
+#   region   = var.region
 
-  storage_config {
-    bucket = google_storage_bucket.composer_bucket.name
-  }
+#   storage_config {
+#     bucket = google_storage_bucket.composer_bucket.name
+#   }
 
-  config {
-    software_config {
-      image_version = "composer-3-airflow-2.10.5"
-      pypi_packages = {
-        "dbt-bigquery" = "1.9.2"
-        "dlt"          = "1.11.0"
-        "astronomer-cosmos" = "1.10.1"
-      }
-    }
+#   config {
+#     software_config {
+#       image_version = "composer-3-airflow-2.10.5"
+#       pypi_packages = {
+#         "dbt-bigquery" = "1.9.2"
+#         "dlt"          = "1.11.0"
+#         "astronomer-cosmos" = "1.10.1"
+#       }
+#     }
 
-    node_config {
-      service_account = google_service_account.env_sa.email
-    }
-#
-#     environment_preset = "ENVIRONMENT_PRESET_MEDIUM"
-  }
-}
+#     node_config {
+#       service_account = google_service_account.env_sa.email
+#     }
+# #
+# #     environment_preset = "ENVIRONMENT_PRESET_MEDIUM"
+#   }
+# }
