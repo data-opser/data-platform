@@ -5,7 +5,7 @@ module "instance_template" {
   region             = var.region
   project_id         = var.project
   network = "default"
-  machine_type = "e2-standard-2" 
+  machine_type = "e2-standard-2"
 }
 
 module "compute_instance" {
@@ -16,6 +16,10 @@ module "compute_instance" {
   num_instances       = 1
   instance_template   = module.instance_template.self_link
   deletion_protection = false
+  access_config = [{
+    nat_ip       = null
+    network_tier = "STANDARD"
+  }]
 }
 
 resource "google_compute_firewall" "allow-trafick" {
