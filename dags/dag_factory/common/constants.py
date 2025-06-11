@@ -9,7 +9,7 @@ DAGS_PATH = os.path.abspath(os.path.dirname(__file__))  # points to /home/airflo
 if DAGS_PATH not in sys.path:
     sys.path.insert(0, DAGS_PATH)
 
-DAGS_PATH = f'{os.getcwd()}/gcs/dags'
+DAGS_PATH = f'{os.getcwd()}/dags'
 # AIRFLOW_HOME = Path(os.getcwd())
 
 TRANSFORM_PATH = f'{DAGS_PATH}/transform'
