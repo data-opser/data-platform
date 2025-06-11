@@ -24,14 +24,24 @@ select
     session_id,
     view_item_first_seen_at,
     view_item_count,
+
+    geo_continent,
+    geo_subcontinent,
+    geo_country,
+    geo_region,
+    geo_city,
+
     device_type,
     device_brand,
     device_model,
+
     os_name,
     os_version,
     browser_name,
+
     view_item_landing_page_title,
     view_item_landing_page_url,
+
     session_number,
     product_id,
     product_name,
@@ -55,6 +65,12 @@ select
     bf.device__operating_system as os_name,
     bf.device__operating_system_version as os_version,
     bf.device__web_info__browser as browser_name,
+
+    bf.geo__continent as geo_continent,
+    bf.geo__sub_continent as geo_subcontinent,
+    bf.geo__country as geo_country,
+    bf.geo__region as geo_region,
+    bf.geo__city as geo_city,
 
     ev.page_title as view_item_landing_page_title,
     ev.page_location as view_item_landing_page_url,

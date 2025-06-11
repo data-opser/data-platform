@@ -45,11 +45,11 @@ select
 
     count(session_started_at) as session_started,
 
-    sum(ifnull(onboarding_started, 0)) as onboarding_started,
-    sum(ifnull(checkout_presented, 0)) as checkout_presented,
+    sum(onboarding_started) as onboarding_started,
+    sum(checkout_presented) as checkout_presented,
 
-    sum(ifnull(view_promo_completed, 0)) as view_promo_completed,
-    sum(ifnull(select_promo_completed, 0)) as select_promo_completed,
+    sum(view_promo_completed) as view_promo_completed,
+    sum(select_promo_completed) as select_promo_completed,
 
     sum(ifnull(view_promo_unique, 0)) as view_promo_unique,
     sum(ifnull(view_promo_total, 0)) as view_promo_total,
@@ -57,7 +57,7 @@ select
     sum(ifnull(select_promo_unique, 0)) as select_promo_unique,
     sum(ifnull(select_promo_total, 0)) as select_promo_total,
 
-    sum(ifnull(purchase_completed, 0)) as purchase_completed,
+    sum(purchase_completed) as purchase_completed,
 
     sum(ifnull(purchase_revenue_usd, 0)) as purchase_revenue_usd,
 

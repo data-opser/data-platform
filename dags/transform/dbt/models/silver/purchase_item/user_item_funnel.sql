@@ -5,6 +5,13 @@ select
     vi.session_id,
     vi.view_item_first_seen_at,
     vi.view_item_count,
+
+    vi.geo_continent,
+    vi.geo_subcontinent,
+    vi.geo_country,
+    vi.geo_region,
+    vi.geo_city,
+
     vi.device_type,
     vi.device_brand,
     vi.device_model,
@@ -23,7 +30,7 @@ select
     coalesce(pi.product_category, vi.product_category) as product_category,
 
     if(ac.add_card_at is not null, 1, 0) as add_card,
-    if(pi.purchase_completed_at is not null, 1, 0) as purchase_completed,
+    if(pi.purchase_completed_at is not null, 1, 0) as item_purchase_completed,
 
     ac.add_card_at,
     ac.add_card_first_seen_at,
