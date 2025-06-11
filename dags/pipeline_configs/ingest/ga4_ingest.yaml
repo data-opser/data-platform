@@ -1,0 +1,17 @@
+dags:
+  ga4_ingest:
+    dag_config:
+      description: 'A DAG to pull data from gxr source.'
+      tags: ["ingest", "dlt", "ga4"]
+      default_args:
+      schedule: '0 0 * * *'
+    tool: dlt
+    outlet: True
+    dag_type: ga4
+    pipeline:
+      pipeline_name: "ga4"
+      destination_name: 'bronze_ga4'
+      tasks:
+        - source: ga4_source
+          run_parameters:
+            retries: 2

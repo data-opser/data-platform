@@ -1,13 +1,33 @@
-dataplatform:
-  target: prod
+bigquery:
+  target: "{{ env_var('ENV', 'dev') }}"
   outputs:
     prod:
-        type: bigquery
-        method: service-account
-        keyfile: keys.json
-        project: data-platform-457606
-        dataset: dbt_bbagins
-        threads: 1
-        timeout_seconds: 300
-        location: US
-        priority: interactive
+      type: bigquery
+      method: oauth
+      project: data-platform-457606
+      schema: prod
+      threads: 1
+      timeout_seconds: 300
+      location: US
+      priority: interactive
+
+    stage:
+      type: bigquery
+      method: oauth
+      project: data-platform-457606
+      schema: stage
+      threads: 1
+      timeout_seconds: 300
+      location: US
+      priority: interactive
+
+    dev:
+      type: bigquery
+      method: service-account
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      project: data-platform-457606
+      schema: dev
+      threads: 1
+      timeout_seconds: 300
+      location: US
+      priority: interactive

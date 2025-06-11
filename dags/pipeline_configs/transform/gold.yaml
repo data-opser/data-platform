@@ -1,0 +1,7 @@
+dags:
+  dbt_gold:
+    dag_config:
+      tags: [ "transform", "dbt", "gold" ]
+      schedule: "bigquery://ga4_ingest"
+    tool: dbt
+    outlet: False
