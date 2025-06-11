@@ -2,6 +2,7 @@ dags:
   dbt_silver_product_session:
     dag_config:
       tags: [ "transform", "dbt", "silver", "product_session" ]
-      schedule: "bigquery://ga4_ingest"
+      schedule:
+        - "bigquery://ga4_ingest"
     tool: dbt
     outlet: True

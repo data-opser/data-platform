@@ -10,7 +10,7 @@ from ingest.pull.ga4_pipeline.ga4_pipeline import ga4_source
 
 from dag_factory.common import constants
 
-DAGS_FOLDER = os.path.abspath(os.path.dirname(__file__))  # points to /home/airflow/gcs/dags
+DAGS_FOLDER = os.path.abspath(os.path.dirname(__file__))
 if DAGS_FOLDER not in sys.path:
     sys.path.insert(0, DAGS_FOLDER)
 
