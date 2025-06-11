@@ -1,4 +1,4 @@
-name: 'Terragrunt GitHub Actions'
+name: 'Terraform GitHub Actions'
 on:
   push:
     paths:
@@ -18,7 +18,7 @@ env:
   working_dir: 'operation/terraform'
 
 jobs:
-  terragrunt:
+  Terraform:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -35,16 +35,16 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
-    - name: Initialize Terragrunt
+    - name: Initialize Terraform
       run: cd ${{env.working_dir}} && terraform init
 
-    - name: Validate Terragrunt configuration
+    - name: Validate Terraform configuration
       run: cd ${{env.working_dir}} && terraform validate
       continue-on-error: true
 
-    - name: Plan Terragrunt deployment
+    - name: Plan Terraform deployment
       run: cd ${{env.working_dir}} && terraform plan
 
-    - name: Apply Terragrunt deployment
+    - name: Apply Terraform deployment
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: cd ${{env.working_dir}} && terraform apply -auto-approve
