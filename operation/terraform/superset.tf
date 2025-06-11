@@ -5,6 +5,7 @@ module "instance_template" {
   region             = var.region
   project_id         = var.project
   network = "default"
+  machine_type = "e2-standart-2" 
 }
 
 module "compute_instance" {
