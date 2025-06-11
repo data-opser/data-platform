@@ -1,0 +1,50 @@
+name: 'Terraform GitHub Actions'
+on:
+  push:
+    paths:
+      - 'operation/terraform/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'operation/terraform/**'
+permissions:
+      id-token: write # This is required for aws oidc connection
+      contents: read # This is required for actions/checkout
+      pull-requests: write # This is required for gh bot to comment PR
+env:
+  tf_version: '1.8.5'
+  tg_version: '0.59.4'
+  working_dir: 'operation/terraform'
+
+jobs:
+  Terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Terraform
+      run: |
+        wget https://releases.hashicorp.com/terraform/1.12.1/terraform_1.12.1_linux_amd64.zip
+        unzip terraform_1.12.1_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+
+    - name: Configure google credentials
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+    - name: Initialize Terraform
+      run: cd ${{env.working_dir}} && terraform init
+
+    - name: Validate Terraform configuration
+      run: cd ${{env.working_dir}} && terraform validate
+      continue-on-error: true
+
+    - name: Plan Terraform deployment
+      run: cd ${{env.working_dir}} && terraform plan
+
+    - name: Apply Terraform deployment
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: cd ${{env.working_dir}} && terraform apply -auto-approve
