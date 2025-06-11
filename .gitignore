@@ -1,6 +1,23 @@
+**/keys.json
+# ignore secrets, virtual environments and typical python compilation artifacts
+secrets.toml
+# ignore basic python artifacts
+.env
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+# Ignore .DS_Store files
+.DS_Store
+#
+.terraform.lock.hcl
+.terragrunt-cache
+*.idea
+.terraform/
 venv/
 .env
 superset_config.py
 .terraform*
 terraform.*
 *.idea
+.venv/
+*.zip

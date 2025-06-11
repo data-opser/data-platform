@@ -1,0 +1,7 @@
+dags:
+  dbt_silver_purchase_item:
+    dag_config:
+      tags: [ "transform", "dbt", "silver", "purchase_item" ]
+      schedule: "bigquery://ga4_ingest"
+    tool: dbt
+    outlet: True

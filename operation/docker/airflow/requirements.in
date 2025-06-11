@@ -1,0 +1,4 @@
+dlt
+dbt-bigquery
+astronomer-cosmos
+apache-airflow==2.10.5
