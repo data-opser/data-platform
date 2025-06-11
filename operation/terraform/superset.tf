@@ -14,10 +14,6 @@ module "compute_instance" {
   num_instances       = 1
   instance_template   = module.instance_template.self_link
   deletion_protection = false
-
-  access_config = [{
-    network_tier = "STANDARD"
-  }, ]
 }
 
 resource "google_compute_firewall" "allow-trafick" {
