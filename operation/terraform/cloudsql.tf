@@ -8,7 +8,8 @@ module "pg" {
   database_version     = "POSTGRES_17"
 
   // Master configurations
-  tier                            = "db-perf-optimized-N-2"
+  edition                         = "ENTERPRISE"
+  tier                            = "db-custom-1-3840"
   availability_type               = "REGIONAL"
   maintenance_window_day          = 7
   maintenance_window_hour         = 12
