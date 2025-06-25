@@ -5,7 +5,7 @@ module "simple-composer-environment" {
   project_id               = var.project
   composer_env_name        = "dataops"
   region                   = var.region
-  composer_service_account = google_service_account.env_sa.email
+  composer_service_account = "serviceAccount:${google_service_account.env_sa.email}"
   network                  = "default"
   subnetwork               = "default"
   storage_bucket           = google_storage_bucket.composer_bucket.url

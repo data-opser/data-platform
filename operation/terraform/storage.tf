@@ -3,3 +3,5 @@ resource "google_storage_bucket" "composer_bucket" {
   location = var.region
   storage_class = "STANDARD"
 }
+
+

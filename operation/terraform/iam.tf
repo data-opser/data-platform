@@ -7,5 +7,5 @@ resource "google_service_account" "env_sa" {
 resource "google_project_iam_member" "editor_sa" {
   project = var.project
   role    = "roles/editor"
-  member  = google_service_account.env_sa.email
+  member  = "serviceAccount:${google_service_account.env_sa.email}"
 }
