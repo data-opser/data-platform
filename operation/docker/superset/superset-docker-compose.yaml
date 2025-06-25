@@ -40,7 +40,7 @@ services:
     user: "root"
     restart: unless-stopped
     volumes:
-      - ./superset_config.py:/app/superset_config.py
+      - ./superset_config.py:/app/superset_config.py:ro,z
     ports:
       - 8088:8088
     environment:

@@ -5,6 +5,7 @@ module "instance_template" {
   region             = var.region
   project_id         = var.project
   network = "default"
+  subnetwork = "default"
   machine_type = "e2-standard-2"
 }
 
@@ -16,6 +17,7 @@ module "compute_instance" {
   num_instances       = 1
   instance_template   = module.instance_template.self_link
   deletion_protection = false
+  subnetwork = "default"
   access_config = [{
     nat_ip       = google_compute_address.static_ip_superset.address
     network_tier = "STANDARD"

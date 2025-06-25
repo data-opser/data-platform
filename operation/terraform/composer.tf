@@ -1,76 +1,20 @@
-# resource "google_composer_environment" "prod_airflow" {
-#   name   = "prod-airflow"
-#   region = "us-central1"
-#
-#   storage_config {
-#     bucket = google_storage_bucket.composer_bucket.name
-#   }
-#
-#   config {
-#
-#     software_config {
-#       image_version  = "composer-2.13.2-airflow-2.10.5"
-#       env_variables  = { ENV = "prod" }
-#       airflow_config_overrides = {
-#         "core-load_example" = "False"
-#       }
-#       pypi_packages = {
-#         "dbt-bigquery"      = "1.9.2",
-#         "dlt"               = "1.11.0",
-#         "astronomer-cosmos" = "1.10.1"
-#       }
-#     }
-#
-#     workloads_config {
-#       scheduler {
-#         cpu        = 2
-#         memory_gb  = 4
-#         storage_gb = 5
-#         count      = 1
-#       }
-#       web_server {
-#         cpu        = 2
-#         memory_gb  = 4
-#         storage_gb = 5
-#       }
-#       worker {
-#         cpu        = 2
-#         memory_gb  = 4
-#         storage_gb = 5
-#         min_count  = 2
-#         max_count  = 6
-#       }
-#     }
-#
-#     node_config {
-#       service_account = "admin-340@data-platform-457606.iam.gserviceaccount.com"
-#     }
-#   }
-# }
+module "simple-composer-environment" {
+  source  = "terraform-google-modules/composer/google//modules/create_environment_v3"
+  version = "~> 6.0"
 
-# resource "google_composer_environment" "cc3" {
-#   provider = google-beta
-#   name     = "prod-airflow"
-#   region   = var.region
+  project_id               = var.project
+  composer_env_name        = "dataops"
+  region                   = var.region
+  composer_service_account = google_service_account.env_sa.email
+  network                  = "default"
+  subnetwork               = "default"
+  storage_bucket           = google_storage_bucket.composer_bucket.url
 
-#   storage_config {
-#     bucket = google_storage_bucket.composer_bucket.name
-#   }
+  environment_size = "ENVIRONMENT_SIZE_SMALL"
 
-#   config {
-#     software_config {
-#       image_version = "composer-3-airflow-2.10.5"
-#       pypi_packages = {
-#         "dbt-bigquery" = "1.9.2"
-#         "dlt"          = "1.11.0"
-#         "astronomer-cosmos" = "1.10.1"
-#       }
-#     }
+  resilience_mode = "STANDARD_RESILIENCE"
 
-#     node_config {
-#       service_account = google_service_account.env_sa.email
-#     }
-# #
-# #     environment_preset = "ENVIRONMENT_PRESET_MEDIUM"
-#   }
-# }
+  depends_on = [
+    google_project_iam_member.editor_sa,
+  ]
+}
