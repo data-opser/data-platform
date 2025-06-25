@@ -13,7 +13,11 @@ module "simple-composer-environment" {
   environment_size = "ENVIRONMENT_SIZE_SMALL"
 
   resilience_mode = "STANDARD_RESILIENCE"
-
+  pypi_packages = {
+    "dlt" = "==1.11.0"
+    "dbt-bigquery" = "==1.9.2"
+    "astronomer-cosmos" = "==1.10.1"
+  }
   depends_on = [
     google_project_iam_member.editor_sa,
   ]
