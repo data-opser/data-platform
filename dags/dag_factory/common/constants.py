@@ -5,9 +5,7 @@ from pathlib import Path
 
 ENV = os.getenv("ENV", "dev")
 
-DAGS_PATH = os.path.abspath(os.path.dirname(__file__))  # points to /home/airflow/gcs/dags
-if DAGS_PATH not in sys.path:
-    sys.path.insert(0, DAGS_PATH)
+DAGS_PATH = '/home/airflow/gcs/dags'  # points to /home/airflow/gcs/dags
 
 TRANSFORM_PATH = f'{DAGS_PATH}/transform'
 
