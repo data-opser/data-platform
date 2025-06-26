@@ -1,9 +1,8 @@
 dags:
   ga4_ingest:
     dag_config:
-      description: 'A DAG to pull data from gxr source.'
+      description: 'A DAG to pull data from ga4 source.'
       tags: ["ingest", "dlt", "ga4"]
-      default_args:
       schedule: '0 0 * * *'
     tool: dlt
     outlet: True

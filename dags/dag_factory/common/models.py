@@ -306,18 +306,15 @@ class Dag(BaseModel):
     transformers: Optional[Dict[str, Dict[str, Any]]] = None
 
     @root_validator(pre=True)
-    def validate_capi_logs_table(cls, values):
+    def validate_config(cls, values):
         """
-            Validates and processes the fields in the 'capi_logs' table based on
-            the values provided for 'tool', 'dag_type', and other configurations.
+            Validates and processes the values provided for 'tool', 'dag_type', and other configurations.
 
             This method dynamically modifies values for certain fields based on
             conditional logic, including:
             - 'pipeline': Initialized as `None` or validated based on the 'tool' field.
             - 'dag_config': Initialized as an instance of `CAPIDagConfig` or `DagConfig`
               based on the 'tool' field.
-            - 'additional_fields': If 'dag_type' is `facebook_capi_pusher`, an instance
-              of `CAPIAdditionalFields` is created; otherwise, the existing value is used.
             - 'transformers': The 'transformers' field is updated based on the environment,
               appending '-stage' if not in 'prod'.
 
@@ -337,7 +334,6 @@ class Dag(BaseModel):
             values['pipeline'] = Pipeline(**values.get('pipeline'))
         values['dag_config'] = DagConfig(**values.get('dag_config'))
         if values.get('transformers') is not None:
-            # values['transformers'] = values.get('transformers')
             for item in values['transformers']:
                 values['transformers'][item]['name'] = (f"{values['transformers'][item]['name']}"
                                                 f"{'-stage' if get_var('env', -1) != 'prod' else ''}")
