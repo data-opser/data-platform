@@ -23,8 +23,7 @@ bigquery:
 
     dev:
       type: bigquery
-      method: service-account
-      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      method: oauth
       project: data-platform-457606
       schema: dev
       threads: 1
