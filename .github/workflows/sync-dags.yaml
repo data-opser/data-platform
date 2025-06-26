@@ -29,4 +29,4 @@ jobs:
 
     - name: Sync dags
       run: | 
-        gcloud storage rsync  dags/ gs://dataoops-prod-dags/dags/ --recursive --delete-unmatched-destination-objects
+        gcloud storage rsync  dags gs://dataoops-prod-dags/dags --recursive --delete-unmatched-destination-objects
